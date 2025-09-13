@@ -220,6 +220,16 @@ S2N_API extern unsigned long s2n_get_openssl_version(void);
 
 /**
  * Initializes the s2n-tls library and should be called once in your application, before any other s2n-tls
+ * functions are called. Failure to call s2n_init_no_config() will result in errors from other s2n-tls functions.
+ *
+ * @warning This function is not thread safe and should only be called once.
+ *
+ * @returns S2N_SUCCESS on success. S2N_FAILURE on failure
+ */
+S2N_API extern int s2n_init_no_config(void);
+
+/**
+ * Initializes the s2n-tls library and should be called once in your application, before any other s2n-tls
  * functions are called. Failure to call s2n_init() will result in errors from other s2n-tls functions.
  *
  * @warning This function is not thread safe and should only be called once.

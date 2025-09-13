@@ -51,11 +51,9 @@ int s2n_enable_atexit(void)
     return S2N_SUCCESS;
 }
 
-int s2n_init(void)
-{
-    /* USAGE-GUIDE says s2n_init MUST NOT be called more than once
-     * Public documentation for API states s2n_init should only be called once
-     * https://github.com/aws/s2n-tls/issues/3446 is a result of not enforcing this
+int s2n_init_no_config(void) {
+    /* USAGE-GUIDE says s2n_init_no_config MUST NOT be called more than once
+     * Public documentation for API states s2n_init_no_config should only be called once
      */
     POSIX_ENSURE(!initialized, S2N_ERR_INITIALIZED);
 
@@ -79,7 +77,6 @@ int s2n_init(void)
     POSIX_GUARD_RESULT(s2n_hash_algorithms_init());
     POSIX_GUARD(s2n_cipher_suites_init());
     POSIX_GUARD(s2n_security_policies_init());
-    POSIX_GUARD(s2n_config_defaults_init());
     POSIX_GUARD(s2n_extension_type_init());
     POSIX_GUARD_RESULT(s2n_tls13_empty_transcripts_init());
     POSIX_GUARD_RESULT(s2n_atomic_init());
@@ -98,6 +95,17 @@ int s2n_init(void)
 
     initialized = true;
 
+    return S2N_SUCCESS;
+}
+
+int s2n_init(void)
+{
+    /* USAGE-GUIDE says s2n_init MUST NOT be called more than once
+     * Public documentation for API states s2n_init should only be called once
+     * https://github.com/aws/s2n-tls/issues/3446 is a result of not enforcing this
+     */
+    POSIX_GUARD(s2n_init_no_config());
+    POSIX_GUARD(s2n_config_defaults_init());
     return S2N_SUCCESS;
 }
 
